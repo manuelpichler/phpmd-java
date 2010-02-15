@@ -119,10 +119,51 @@ public class PhpmdTest {
         assertEquals(2, phpmd.run().getRuleViolations().size());
     }
 
+    @Test
+    public void cliToolHandlesMultipleRuleSets() throws Exception
+    {
+        Phpmd phpmd = new Phpmd();
+        phpmd.addSource(this.getResource(""));
+        phpmd.addRuleSet("codesize");
+        phpmd.addRuleSet("unusedcode");
+
+        assertEquals(3, phpmd.run().getRuleViolations().size());
+    }
+
+    @Test
+    public void cliToolHandlesMinPriorityAsExpected() throws Exception
+    {
+        Phpmd phpmd = new Phpmd();
+        phpmd.addSource(this.getResource(""));
+        phpmd.addRuleSet("codesize");
+        phpmd.addRuleSet("unusedcode");
+        phpmd.setMinimumPriority(1);
+
+        assertEquals(0, phpmd.run().getRuleViolations().size());
+    }
+
+    @Test
+    public void cliToolGeneratesReportFile() throws Exception
+    {
+        File report = this.getTempResource();
+
+        Phpmd phpmd = new Phpmd();
+        phpmd.addSource(this.getResource(""));
+        phpmd.addRuleSet("codesize");
+        phpmd.addRuleSet("unusedcode");
+        phpmd.run(report);
+
+        assertTrue(report.exists());
+    }
+
     private File getResource(String name) throws Exception
     {
         URL url = getClass().getClassLoader().getResource(RESOURCE_PATH + name);
         return new File(url.toURI());
     }
 
+    private File getTempResource() throws Exception
+    {
+        return File.createTempFile("temp_", ".temp", true);
+    }
 }
