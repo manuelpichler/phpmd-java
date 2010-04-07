@@ -61,6 +61,9 @@ public class Phpmd {
 
     public static final String SCRIPT_NAME = "phpmd";
 
+    public static final Integer EXIT_CODE_SUCCESS = 0,
+                                EXIT_CODE_VIOLATION = 2;
+
     private Executable executable = null;
 
     private ReportFormat format = new ReportFormat();
@@ -79,7 +82,6 @@ public class Phpmd {
     
     public Phpmd(Executable executable) {
         this.executable = executable;
-        this.executable.setValidExitCodes(0, 2);
     }
 
     public Report run() {
@@ -162,6 +164,8 @@ public class Phpmd {
         return script.addArgument(this.sourceList)
                 .addArgument(this.format)
                 .addArgument(this.ruleSets)
-                .addArgument(this.priority);
+                .addArgument(this.priority)
+                .addRegularExitCode(EXIT_CODE_SUCCESS)
+                .addRegularExitCode(EXIT_CODE_VIOLATION);
     }
 }

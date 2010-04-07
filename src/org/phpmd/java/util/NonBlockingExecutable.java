@@ -89,24 +89,6 @@ public class NonBlockingExecutable extends Thread implements Executable {
     }
 
     /**
-     * Sets valid exit codes for the wrapped cli script.
-     *
-     * @param exitCodes An integer array containing the valid exit codes.
-     */
-    public void setValidExitCodes(Integer... exitCodes) {
-        this.executable.setValidExitCodes(exitCodes);
-    }
-
-    /**
-     * Sets valid exit codes for the wrapped cli script.
-     *
-     * @param exitCodes List of integer values representing valid exit codes.
-     */
-    public void setValidExitCode(List<Integer> exitCodes) {
-        this.executable.setValidExitCode(exitCodes);
-    }
-
-    /**
      * Returns a list with Strings representing the final command line string.
      */
     public List<String> getCommandLine() {
@@ -136,6 +118,19 @@ public class NonBlockingExecutable extends Thread implements Executable {
      */
     public Executable addArgument(Argument argument) {
         return argument.toArgument(this);
+    }
+
+    /**
+     * Adds a regular exit code for the underlying cli script.
+     *
+     * @param regularExitCode A regular/none error exit code.
+     *
+     * @return The entire executable.
+     */
+    @Override
+    public Executable addRegularExitCode(Integer regularExitCode) {
+        this.executable.addRegularExitCode(regularExitCode);
+        return this;
     }
 
     /**

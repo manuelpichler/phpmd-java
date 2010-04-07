@@ -77,7 +77,7 @@ public abstract class AbstractExecutable implements Executable {
      */
     private InputStream stderr = null;
 
-    private List<Integer> validExitCodes = Arrays.asList(0);
+    private List<Integer> validExitCodes = new ArrayList<Integer>();
 
     /**
      * Constructs a new executable for the given executable name.
@@ -114,26 +114,12 @@ public abstract class AbstractExecutable implements Executable {
      *
      * @return List of valid exit codes.
      */
+    @Override
     public List<Integer> getValidExitCodes() {
+        if (this.validExitCodes.isEmpty()) {
+            return new ArrayList<Integer>();
+        }
         return this.validExitCodes;
-    }
-
-    /**
-     * Sets valid exit codes for the wrapped cli script.
-     *
-     * @param exitCodes An integer array containing the valid exit codes.
-     */
-    public void setValidExitCodes(Integer... exitCodes) {
-        this.setValidExitCode(Arrays.asList(exitCodes));
-    }
-
-    /**
-     * Sets valid exit codes for the wrapped cli script.
-     *
-     * @param exitCodes List of integer values representing valid exit codes.
-     */
-    public void setValidExitCode(List<Integer> exitCodes) {
-        this.validExitCodes = exitCodes;
     }
 
     /**
@@ -170,6 +156,21 @@ public abstract class AbstractExecutable implements Executable {
     @Override
     public Executable addArgument(Argument argument) {
         return argument.toArgument(this);
+    }
+
+    /**
+     * Adds a regular exit code for the underlying cli script.
+     *
+     * @param regularExitCode A regular/none error exit code.
+     *
+     * @return The entire executable.
+     */
+    @Override
+    public Executable addRegularExitCode(Integer regularExitCode) {
+        if (!this.validExitCodes.contains(regularExitCode)) {
+            this.validExitCodes.add(regularExitCode);
+        }
+        return this;
     }
 
     /**

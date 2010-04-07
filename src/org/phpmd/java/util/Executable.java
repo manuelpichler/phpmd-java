@@ -56,28 +56,6 @@ import java.util.List;
 public interface Executable {
 
     /**
-     * Returns a list with integer values representing valid exit codes for the
-     * wrapped cli script.
-     *
-     * @return List of valid exit codes.
-     */
-    List<Integer> getValidExitCodes();
-
-    /**
-     * Sets valid exit codes for the wrapped cli script.
-     *
-     * @param exitCodes An integer array containing the valid exit codes.
-     */
-    void setValidExitCodes(Integer... exitCodes);
-
-    /**
-     * Sets valid exit codes for the wrapped cli script.
-     *
-     * @param exitCodes List of integer values representing valid exit codes.
-     */
-    void setValidExitCode(List<Integer> exitCodes);
-
-    /**
      * Executes the underlying command line tool. If the execution failes, this
      * method will throw an exception of type {@link ExecutionException}.
      *
@@ -85,6 +63,14 @@ public interface Executable {
      *         line tool failes.
      */
     void exec();
+
+    /**
+     * Returns a list with integer values representing valid exit codes for the
+     * wrapped cli script.
+     *
+     * @return List of valid exit codes.
+     */
+    List<Integer> getValidExitCodes();
 
     /**
      * Returns a list with all configured fragments that build up the later
@@ -111,6 +97,15 @@ public interface Executable {
      * @return The entire executable.
      */
     Executable addArgument(Argument argument);
+
+    /**
+     * Adds a regular exit code for the underlying cli script.
+     *
+     * @param regularExitCode A regular/none error exit code.
+     *
+     * @return The entire executable.
+     */
+    Executable addRegularExitCode(Integer regularExitCode);
 
     /**
      * Returns the exit code returned by the underlying command line tool or
