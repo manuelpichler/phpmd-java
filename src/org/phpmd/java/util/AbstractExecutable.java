@@ -48,7 +48,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -199,7 +198,6 @@ public abstract class AbstractExecutable implements Executable {
             this.exitCode = this.doExecute(this.getProcess());
 
             if (!this.validExitCodes.contains(this.exitCode)) {
-System.err.println("EXIT CODE: " + this.exitCode + " - " + this.validExitCodes);
                 throw new ExecutionException(this.getStderrText());
             }
         } catch (IOException ex) {
