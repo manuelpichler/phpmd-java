@@ -79,6 +79,7 @@ public class Phpmd {
     
     public Phpmd(Executable executable) {
         this.executable = executable;
+        this.executable.setValidExitCodes(0, 2);
     }
 
     public Report run() {

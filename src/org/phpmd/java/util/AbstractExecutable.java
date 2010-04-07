@@ -48,6 +48,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -76,6 +77,8 @@ public abstract class AbstractExecutable implements Executable {
      */
     private InputStream stderr = null;
 
+    private List<Integer> validExitCodes = Arrays.asList(0);
+
     /**
      * Constructs a new executable for the given executable name.
      *
@@ -101,6 +104,36 @@ public abstract class AbstractExecutable implements Executable {
      */
     public AbstractExecutable(Executable executable) {
         this(executable.getCommandLine());
+        
+        this.validExitCodes = executable.getValidExitCodes();
+    }
+
+    /**
+     * Returns a list with integer values representing valid exit codes for the
+     * wrapped cli script.
+     *
+     * @return List of valid exit codes.
+     */
+    public List<Integer> getValidExitCodes() {
+        return this.validExitCodes;
+    }
+
+    /**
+     * Sets valid exit codes for the wrapped cli script.
+     *
+     * @param exitCodes An integer array containing the valid exit codes.
+     */
+    public void setValidExitCodes(Integer... exitCodes) {
+        this.setValidExitCode(Arrays.asList(exitCodes));
+    }
+
+    /**
+     * Sets valid exit codes for the wrapped cli script.
+     *
+     * @param exitCodes List of integer values representing valid exit codes.
+     */
+    public void setValidExitCode(List<Integer> exitCodes) {
+        this.validExitCodes = exitCodes;
     }
 
     /**
@@ -164,7 +197,8 @@ public abstract class AbstractExecutable implements Executable {
         try {
             this.exitCode = this.doExecute(this.getProcess());
 
-            if (this.exitCode != 0) {
+            if (!this.validExitCodes.contains(this.exitCode)) {
+System.err.println("EXIT CODE: " + this.exitCode + " - " + this.validExitCodes);
                 throw new ExecutionException(this.getStderrText());
             }
         } catch (IOException ex) {

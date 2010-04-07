@@ -79,6 +79,34 @@ public class NonBlockingExecutable extends Thread implements Executable {
     }
 
     /**
+     * Returns a list with integer values representing valid exit codes for the
+     * wrapped cli script.
+     *
+     * @return List of valid exit codes.
+     */
+    public List<Integer> getValidExitCodes() {
+        return this.executable.getValidExitCodes();
+    }
+
+    /**
+     * Sets valid exit codes for the wrapped cli script.
+     *
+     * @param exitCodes An integer array containing the valid exit codes.
+     */
+    public void setValidExitCodes(Integer... exitCodes) {
+        this.executable.setValidExitCodes(exitCodes);
+    }
+
+    /**
+     * Sets valid exit codes for the wrapped cli script.
+     *
+     * @param exitCodes List of integer values representing valid exit codes.
+     */
+    public void setValidExitCode(List<Integer> exitCodes) {
+        this.executable.setValidExitCode(exitCodes);
+    }
+
+    /**
      * Returns a list with Strings representing the final command line string.
      */
     public List<String> getCommandLine() {
