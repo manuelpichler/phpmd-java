@@ -84,13 +84,17 @@ public class NonBlockingExecutable extends Thread implements Executable {
      *
      * @return List of valid exit codes.
      */
+    @Override
     public List<Integer> getValidExitCodes() {
         return this.executable.getValidExitCodes();
     }
 
     /**
      * Returns a list with Strings representing the final command line string.
+     *
+     * @return List of string fragments representing the command line.
      */
+    @Override
     public List<String> getCommandLine() {
         return this.executable.getCommandLine();
     }
@@ -103,6 +107,7 @@ public class NonBlockingExecutable extends Thread implements Executable {
      *
      * @return The entire executable instances, allows nice chaining.
      */
+    @Override
     public Executable addArgument(String argument) {
         this.executable.addArgument(argument);
         return this;
@@ -116,6 +121,7 @@ public class NonBlockingExecutable extends Thread implements Executable {
      *
      * @return The entire executable instances, allows nice chaining.
      */
+    @Override
     public Executable addArgument(Argument argument) {
         return argument.toArgument(this);
     }
@@ -139,6 +145,7 @@ public class NonBlockingExecutable extends Thread implements Executable {
      * @throws ExecutionException When something the underlying command line
      *         tool fails for some reasone.
      */
+    @Override
     public void exec() throws ExecutionException {
         this.start();
     }
@@ -148,6 +155,7 @@ public class NonBlockingExecutable extends Thread implements Executable {
      *
      * @return Exit code returned by the underlying executable.
      */
+    @Override
     public int exitCode() {
         return this.executable.exitCode();
     }

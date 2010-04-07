@@ -94,6 +94,7 @@ public class DefaultExecutable extends AbstractExecutable {
      * @return The exit code returned by the cli tool.
      * @throws InterruptedException If the process execution fails.
      */
+    @Override
     protected int doExecute(Process proc) throws InterruptedException {
         return proc.waitFor();
     }
