@@ -12,7 +12,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.phpmd.java.util.ExecutableUtil;
 import org.phpmd.java.util.ValidationException;
 import static org.junit.Assert.*;
 
@@ -164,6 +163,6 @@ public class PhpmdTest {
 
     private File getTempResource() throws Exception
     {
-        return File.createTempFile("temp_", ".temp", true);
+        return File.createTempFile("temp_", ".temp");
     }
 }
