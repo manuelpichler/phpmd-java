@@ -109,6 +109,7 @@ public abstract class AbstractExecutable implements Executable {
      *
      * @return List<String>
      */
+    @Override
     public List<String> getCommandLine() {
         return this.command;
     }
@@ -120,6 +121,7 @@ public abstract class AbstractExecutable implements Executable {
      *
      * @return The entire executable.
      */
+    @Override
     public Executable addArgument(String argument) {
         this.command.add(argument);
         return this;
@@ -132,6 +134,7 @@ public abstract class AbstractExecutable implements Executable {
      *
      * @return The entire executable.
      */
+    @Override
     public Executable addArgument(Argument argument) {
         return argument.toArgument(this);
     }
@@ -155,6 +158,7 @@ public abstract class AbstractExecutable implements Executable {
      * @throws ExecutionException When the execution of the underlying command
      *         line tool failes.
      */
+    @Override
     public void exec() throws ExecutionException {
         this.validate();
         try {
@@ -178,6 +182,7 @@ public abstract class AbstractExecutable implements Executable {
      * @throws ExecutionException When the underlying command line tool is still
      *         running.
      */
+    @Override
     public int exitCode() {
         if (this.exitCode == null) {
             throw new ExecutionException("Process still running...");
