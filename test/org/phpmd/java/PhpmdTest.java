@@ -155,6 +155,30 @@ public class PhpmdTest {
         assertTrue(report.exists());
     }
 
+    @Test
+    public void cliToolRunReturnsViolationExitCode() throws Exception {
+        File report = this.getTempResource();
+
+        Phpmd phpmd = new Phpmd();
+        phpmd.addSource(this.getResource(""));
+        phpmd.addRuleSet("codesize");
+        phpmd.addRuleSet("unusedcode");
+        
+        assertEquals(Phpmd.EXIT_CODE_VIOLATION, phpmd.run(report));
+    }
+
+    @Test
+    public void cliToolRunReturnsSuccessExitCode() throws Exception {
+        File report = this.getTempResource();
+
+        Phpmd phpmd = new Phpmd();
+        phpmd.addSource(this.getResource("valid.php"));
+        phpmd.addRuleSet("codesize");
+        phpmd.addRuleSet("unusedcode");
+
+        assertEquals(Phpmd.EXIT_CODE_SUCCESS, phpmd.run(report));
+    }
+
     private File getResource(String name) throws Exception
     {
         URL url = getClass().getClassLoader().getResource(RESOURCE_PATH + name);
@@ -163,6 +187,9 @@ public class PhpmdTest {
 
     private File getTempResource() throws Exception
     {
-        return File.createTempFile("temp_", ".temp");
+        File file = File.createTempFile("temp_", ".temp");
+        file.deleteOnExit();
+
+        return file;
     }
 }

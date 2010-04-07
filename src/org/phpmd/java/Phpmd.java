@@ -95,14 +95,16 @@ public class Phpmd {
         return script.getReport();
     }
 
-    public void run(File file) {
-        this.run(new ReportFile(file));
+    public Integer run(File file) {
+        return this.run(new ReportFile(file));
     }
 
-    public void run(ReportFile output) {
+    public Integer run(ReportFile output) {
         Executable script = new DefaultExecutable(this.executable);
         script = this.prepare(this.prepareExecutable(script, output));
         script.exec();
+
+        return script.exitCode();
     }
 
     private Executable prepare(Executable executable) {
