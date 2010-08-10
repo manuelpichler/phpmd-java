@@ -42,6 +42,7 @@
 
 package org.phpmd.java.util;
 
+import java.net.URL;
 import java.util.List;
 
 /**

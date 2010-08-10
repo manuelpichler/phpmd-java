@@ -59,9 +59,19 @@ import java.util.Set;
  */
 public class RuleSet {
 
-    private static final String[] BUILD_IN = {"codesize", "unusedcode", "naming"};
-
-    private static final Set<String> BUILD_IN_RULESETS = new HashSet<String>(Arrays.asList(BUILD_IN));
+    /**
+     * Build in PHPMD rule sets.
+     */
+    private static final Set<String> BUILD_IN_RULESETS = new HashSet<String>(
+        Arrays.asList(
+            new String[] {
+                "codesize",
+                "design",
+                "naming",
+                "unusedcode"
+            }
+        )
+    );
 
     private String fileOrIdentifier = null;
 

@@ -42,10 +42,10 @@
 
 package org.phpmd.java;
 
+import java.io.File;
 import org.phpmd.java.util.DefaultExecutable;
 import org.phpmd.java.util.NonBlockingExecutable;
 import org.phpmd.java.util.Executable;
-import java.io.File;
 import org.phpmd.java.util.ExecutableUtil;
 
 /**
@@ -59,21 +59,47 @@ import org.phpmd.java.util.ExecutableUtil;
  */
 public class Phpmd {
 
+    /**
+     * Default name of the phpmd command line executable without an OS specific
+     * file extension.
+     */
     public static final String SCRIPT_NAME = "phpmd";
 
+    /**
+     * Valid exit codes returned by the phpmd command line executable.
+     */
     public static final Integer EXIT_CODE_SUCCESS = 0,
                                 EXIT_CODE_VIOLATION = 2;
 
+    /**
+     * The wrapped executable instance.
+     */
     private Executable executable = null;
 
+    /**
+     * Default report format/output.
+     */
     private ReportFormat format = new ReportFormat();
 
+    /**
+     * Specified minimum priority required for rule violations to occure in the
+     * generated report.
+     */
     private Priority priority = new Priority();
 
+    /**
+     * Collection holding the rule sets configured for the phpmd run.
+     */
     private RuleSets ruleSets = new RuleSets();
 
+    /**
+     * Collection holding the input source files.
+     */
     private SourceList sourceList = new SourceList();
 
+    /**
+     * Should phpmd be run in a separate thread?
+     */
     private boolean nonBlocking = false;
 
     public Phpmd() {
@@ -130,30 +156,66 @@ public class Phpmd {
         this.addRuleSet(new RuleSet(ruleSet));
     }
 
+    /**
+     * Adds a rule set that will be applied against the checked source code.
+     *
+     * @param ruleSet A rule set instance.
+     */
     public void addRuleSet(RuleSet ruleSet) {
         this.ruleSets.add(ruleSet);
     }
 
+    /**
+     * Sets the report format to use.
+     *
+     * @param reportFormat The report format to use.
+     */
     public void setReportFormat(String reportFormat) {
         this.setReportFormat(new ReportFormat(reportFormat));
     }
 
+    /**
+     * Sets the report format to use.
+     *
+     * @param reportFormat A report format instance.
+     */
     public void setReportFormat(ReportFormat reportFormat) {
         this.format = reportFormat;
     }
 
+    /**
+     * Sets the required minimum priority for rules to occure in the generated
+     * violation report. A valid priority value is in an integer in a range
+     * between 1 and 5.
+     *
+     * @param priority The minimum priority value.
+     */
     public void setMinimumPriority(int priority) {
         this.setMinimumPriority(new Priority(priority));
     }
 
+    /**
+     * Sets the required minimum priority for rules to occure in the generated
+     * violation report.
+     *
+     * @param priority A priority instance.
+     */
     public void setMinimumPriority(Priority priority) {
         this.priority = priority;
     }
 
+    /**
+     * Configures this phpmd instance to run blocking. This means phpmd will not
+     * run in a separate thread.
+     */
     public void setBlocking() {
         this.nonBlocking = false;
     }
 
+    /**
+     * Configures this phpmd instance to run in non blocking mode. Non blocking
+     * means that phpmd will run in a separate thread.
+     */
     public void setNonBlocking() {
         this.nonBlocking = true;
     }
