@@ -42,9 +42,9 @@
 
 package org.phpmd.java;
 
-import org.phpmd.java.util.ValidationException;
-import org.phpmd.java.util.Argument;
-import org.phpmd.java.util.Executable;
+import de.xplib.execution.Argument;
+import de.xplib.execution.Executable;
+import de.xplib.execution.ValidationException;
 
 /**
  *

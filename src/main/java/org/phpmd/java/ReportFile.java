@@ -1,5 +1,5 @@
 /**
- * This file is part of the simple java execution helper library.
+ * This file is part of PHPMD Java binding project.
  *
  * Copyright (c) 2010, Manuel Pichler <mapi@phpmd.org>.
  * All rights reserved.
@@ -40,11 +40,15 @@
  * @link      http://phpmd.org
  */
 
-package org.phpmd.java.util;
+package org.phpmd.java;
+
+import de.xplib.execution.Argument;
+import de.xplib.execution.Executable;
+import de.xplib.execution.ValidationException;
+import java.io.File;
 
 /**
- * This type of exception will be thrown when something fails during command
- * execution.
+ *
  *
  * @author    Manuel Pichler <mapi@phpmd.org>
  * @copyright 2010 Manuel Pichler. All rights reserved.
@@ -52,23 +56,36 @@ package org.phpmd.java.util;
  * @version   SVN: $Id$
  * @link      http://phpmd.org
  */
-public class ExecutionException extends RuntimeException {
+public class ReportFile implements Argument {
 
-    /**
-     * Constructs a new exception instance with the given error message.
-     *
-     * @param message Use-case specific error message.
-     */
-    public ExecutionException(String message) {
-        super(message);
+    private static final String OPTION_REPORT_FILE = "--reportfile";
+
+    private File file = null;
+
+    public ReportFile(File file) {
+        this.file = file;
     }
 
-    /**
-     * Constructs a new exception instance caused by the given throwable.
-     *
-     * @param throwable a previously catched exception
-     */
-    public ExecutionException(Throwable throwable) {
-        super(throwable);
+    public Executable toArgument(Executable executable) {
+        this.validate();
+        
+        return executable
+                .addArgument(OPTION_REPORT_FILE)
+                .addArgument(this.file.getAbsolutePath());
+    }
+
+    protected void validate() {
+        if (this.file.isDirectory()) {
+            throw new ValidationException("The specified output file '" + this.file.getAbsolutePath() + "' is an existing directory." );
+        }
+        if (this.file.exists() && !this.file.canWrite()) {
+            throw new ValidationException("The specified output file '" + this.file.getAbsolutePath() + "' is not writable." );
+        }
+        if (this.file.getParentFile().exists()) {
+            return;
+        }
+        if (!this.file.getParentFile().mkdirs()) {
+            throw new ValidationException("Cannot create parent directory for output file '" + this.file.getAbsolutePath() + "'." );
+        }
     }
 }

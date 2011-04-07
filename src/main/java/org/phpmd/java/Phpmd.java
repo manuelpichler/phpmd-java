@@ -42,11 +42,11 @@
 
 package org.phpmd.java;
 
+import de.xplib.execution.DefaultExecutable;
+import de.xplib.execution.Executable;
+import de.xplib.execution.ExecutableUtil;
+import de.xplib.execution.NonBlockingExecutable;
 import java.io.File;
-import org.phpmd.java.util.DefaultExecutable;
-import org.phpmd.java.util.NonBlockingExecutable;
-import org.phpmd.java.util.Executable;
-import org.phpmd.java.util.ExecutableUtil;
 
 /**
  *

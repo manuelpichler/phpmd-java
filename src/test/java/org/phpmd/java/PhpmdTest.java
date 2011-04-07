@@ -5,6 +5,7 @@
 
 package org.phpmd.java;
 
+import de.xplib.execution.ValidationException;
 import java.io.File;
 import java.net.URL;
 import org.junit.After;
@@ -12,7 +13,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.phpmd.java.util.ValidationException;
 import static org.junit.Assert.*;
 
 /**
@@ -21,7 +21,7 @@ import static org.junit.Assert.*;
  */
 public class PhpmdTest {
 
-    private static final String RESOURCE_PATH = "org/phpmd/java/_files/";
+    private static final String RESOURCE_PATH = "_files/";
 
     public PhpmdTest() {
     }

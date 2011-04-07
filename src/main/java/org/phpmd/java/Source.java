@@ -42,7 +42,7 @@
 
 package org.phpmd.java;
 
-import org.phpmd.java.util.ValidationException;
+import de.xplib.execution.ValidationException;
 import java.io.File;
 
 /**

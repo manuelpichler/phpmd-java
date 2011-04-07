@@ -42,10 +42,11 @@
 
 package org.phpmd.java;
 
-import org.phpmd.java.util.ValidationException;
-import java.io.File;
-import org.phpmd.java.util.Argument;
-import org.phpmd.java.util.Executable;
+import de.xplib.execution.Argument;
+import de.xplib.execution.Executable;
+import de.xplib.execution.ValidationException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -56,36 +57,33 @@ import org.phpmd.java.util.Executable;
  * @version   SVN: $Id$
  * @link      http://phpmd.org
  */
-public class ReportFile implements Argument {
+public class RuleSets implements Argument {
 
-    private static final String OPTION_REPORT_FILE = "--reportfile";
+    private List<RuleSet> ruleSets = new ArrayList<RuleSet>();
 
-    private File file = null;
-
-    public ReportFile(File file) {
-        this.file = file;
+    public void add(RuleSet ruleSet) {
+        this.ruleSets.add(ruleSet);
     }
 
     public Executable toArgument(Executable executable) {
         this.validate();
-        
-        return executable
-                .addArgument(OPTION_REPORT_FILE)
-                .addArgument(this.file.getAbsolutePath());
+        return executable.addArgument(this.ruleSetsToString());
+    }
+
+    private String ruleSetsToString() {
+        String string = "";
+        for (RuleSet ruleSet : this.ruleSets) {
+            string += "," + ruleSet.getFileOrIdentifier();
+        }
+        return string.substring(1);
     }
 
     protected void validate() {
-        if (this.file.isDirectory()) {
-            throw new ValidationException("The specified output file '" + this.file.getAbsolutePath() + "' is an existing directory." );
+        if (this.ruleSets.size() == 0) {
+            throw new ValidationException("No ruleset specified.");
         }
-        if (this.file.exists() && !this.file.canWrite()) {
-            throw new ValidationException("The specified output file '" + this.file.getAbsolutePath() + "' is not writable." );
-        }
-        if (this.file.getParentFile().exists()) {
-            return;
-        }
-        if (!this.file.getParentFile().mkdirs()) {
-            throw new ValidationException("Cannot create parent directory for output file '" + this.file.getAbsolutePath() + "'." );
+        for (RuleSet ruleSet : this.ruleSets) {
+            ruleSet.validate();
         }
     }
 }

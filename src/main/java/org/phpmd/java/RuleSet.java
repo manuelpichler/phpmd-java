@@ -42,13 +42,14 @@
 
 package org.phpmd.java;
 
-import org.phpmd.java.util.ValidationException;
-import org.phpmd.java.util.Argument;
-import org.phpmd.java.util.Executable;
+import de.xplib.execution.ValidationException;
+import java.io.File;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- * This class represents a report format that should be used for the generated
- * PHPMD report file.
+ *
  *
  * @author    Manuel Pichler <mapi@phpmd.org>
  * @copyright 2010 Manuel Pichler. All rights reserved.
@@ -56,75 +57,44 @@ import org.phpmd.java.util.Executable;
  * @version   SVN: $Id$
  * @link      http://phpmd.org
  */
-public class ReportFormat implements Argument {
+public class RuleSet {
 
     /**
-     * Build-in report formats.
+     * Build in PHPMD rule sets.
      */
-    public static final String FORMAT_XML = "xml",
-                               FORMAT_HTML = "html",
-                               FORMAT_TEXT = "text";
+    private static final Set<String> BUILD_IN_RULESETS = new HashSet<String>(
+        Arrays.asList(
+            new String[] {
+                "codesize",
+                "design",
+                "naming",
+                "unusedcode"
+            }
+        )
+    );
 
-    /**
-     * The default report format.
-     */
-    public static final String DEFAULT_FORMAT = FORMAT_XML;
+    private String fileOrIdentifier = null;
 
-    /**
-     * The report output format.
-     */
-    private String format;
-
-    /**
-     * Default ctor for this class.
-     */
-    public ReportFormat() {
-        this(DEFAULT_FORMAT);
+    public RuleSet(String fileOrIdentifier) {
+        this.fileOrIdentifier = fileOrIdentifier;
     }
 
-    /**
-     * Constructs a new report format instance.
-     *
-     * @param format The report output format.
-     */
-    public ReportFormat(String format) {
-        this.format = format;
+    public String getFileOrIdentifier() {
+        return this.fileOrIdentifier;
     }
 
-    /**
-     * Returns the used report output format.
-     *
-     * @return String
-     */
-    public String getFormat() {
-        return this.format;
-    }
-
-    /**
-     * Appends the required cli-command string tokens to the given executable
-     * instance.
-     *
-     * @param executable Context executable.
-     *
-     * @return The prepared command list.
-     */
-    public Executable toArgument(Executable executable) {
-        this.validate();
-        return executable.addArgument(this.format);
-    }
-
-    /**
-     * Validates that the value of this object can safely be used in the phpmd
-     * command line string. This method will throw a {@link ValidationException}
-     * exception when the specified report format is <b>null</b> or an empty
-     * string.
-     *
-     * @throws ValidationException When the spefieid report format is an empty
-     *         string or <b>null</b>.
-     */
     protected void validate() {
-        if (this.format == null || this.format.trim().equals("")) {
-            throw new ValidationException("The report format cannot be null or empty.");
+        if (!this.isBuildInRuleSet() && !this.isExistingFile()) {
+            throw new ValidationException("The ruleset '" + this.fileOrIdentifier + "' is neither a build-in ruleset nor an existing file.");
         }
+    }
+
+    private boolean isBuildInRuleSet() {
+        return BUILD_IN_RULESETS.contains(this.fileOrIdentifier);
+    }
+
+    private boolean isExistingFile() {
+        File file = new File(this.fileOrIdentifier);
+        return (file.exists() && file.isFile());
     }
 }

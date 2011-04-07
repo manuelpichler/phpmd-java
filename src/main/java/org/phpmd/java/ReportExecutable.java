@@ -42,10 +42,8 @@
 
 package org.phpmd.java;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.phpmd.java.util.AbstractExecutable;
-import org.phpmd.java.util.Executable;
+import de.xplib.execution.AbstractExecutable;
+import de.xplib.execution.Executable;
 
 /**
  *

@@ -1,5 +1,5 @@
 /**
- * This file is part of the simple java execution helper library.
+ * This file is part of PHPMD Java binding project.
  *
  * Copyright (c) 2010, Manuel Pichler <mapi@phpmd.org>.
  * All rights reserved.
@@ -40,11 +40,15 @@
  * @link      http://phpmd.org
  */
 
-package org.phpmd.java.util;
+package org.phpmd.java;
+
+import de.xplib.execution.Argument;
+import de.xplib.execution.Executable;
+import de.xplib.execution.ValidationException;
 
 /**
- * This type of exception will be thrown when the configured executable is not
- * executable through the current process.
+ * This class represents a report format that should be used for the generated
+ * PHPMD report file.
  *
  * @author    Manuel Pichler <mapi@phpmd.org>
  * @copyright 2010 Manuel Pichler. All rights reserved.
@@ -52,14 +56,75 @@ package org.phpmd.java.util;
  * @version   SVN: $Id$
  * @link      http://phpmd.org
  */
-public class ExecutableNotExecutableException extends ExecutionException {
+public class ReportFormat implements Argument {
 
     /**
-     * Constructs a new exception instance.
-     *
-     * @param executable Name of the configured executable.
+     * Build-in report formats.
      */
-    public ExecutableNotExecutableException(String executable) {
-        super(String.format("The file '%s' is not executable.", executable));
+    public static final String FORMAT_XML = "xml",
+                               FORMAT_HTML = "html",
+                               FORMAT_TEXT = "text";
+
+    /**
+     * The default report format.
+     */
+    public static final String DEFAULT_FORMAT = FORMAT_XML;
+
+    /**
+     * The report output format.
+     */
+    private String format;
+
+    /**
+     * Default ctor for this class.
+     */
+    public ReportFormat() {
+        this(DEFAULT_FORMAT);
+    }
+
+    /**
+     * Constructs a new report format instance.
+     *
+     * @param format The report output format.
+     */
+    public ReportFormat(String format) {
+        this.format = format;
+    }
+
+    /**
+     * Returns the used report output format.
+     *
+     * @return String
+     */
+    public String getFormat() {
+        return this.format;
+    }
+
+    /**
+     * Appends the required cli-command string tokens to the given executable
+     * instance.
+     *
+     * @param executable Context executable.
+     *
+     * @return The prepared command list.
+     */
+    public Executable toArgument(Executable executable) {
+        this.validate();
+        return executable.addArgument(this.format);
+    }
+
+    /**
+     * Validates that the value of this object can safely be used in the phpmd
+     * command line string. This method will throw a {@link ValidationException}
+     * exception when the specified report format is <b>null</b> or an empty
+     * string.
+     *
+     * @throws ValidationException When the spefieid report format is an empty
+     *         string or <b>null</b>.
+     */
+    protected void validate() {
+        if (this.format == null || this.format.trim().equals("")) {
+            throw new ValidationException("The report format cannot be null or empty.");
+        }
     }
 }

@@ -42,14 +42,14 @@
 
 package org.phpmd.java;
 
-import org.phpmd.java.util.ValidationException;
-import java.io.File;
-import java.util.Arrays;
+import de.xplib.execution.Argument;
+import de.xplib.execution.Executable;
+import de.xplib.execution.ValidationException;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- *
+ * This class represents a list of source files and/or directories.
  *
  * @author    Manuel Pichler <mapi@phpmd.org>
  * @copyright 2010 Manuel Pichler. All rights reserved.
@@ -57,44 +57,51 @@ import java.util.Set;
  * @version   SVN: $Id$
  * @link      http://phpmd.org
  */
-public class RuleSet {
+public class SourceList implements Argument {
 
     /**
-     * Build in PHPMD rule sets.
+     * All input sources.
      */
-    private static final Set<String> BUILD_IN_RULESETS = new HashSet<String>(
-        Arrays.asList(
-            new String[] {
-                "codesize",
-                "design",
-                "naming",
-                "unusedcode"
-            }
-        )
-    );
+    private Set<Source> inputs = new HashSet<Source>();
 
-    private String fileOrIdentifier = null;
-
-    public RuleSet(String fileOrIdentifier) {
-        this.fileOrIdentifier = fileOrIdentifier;
+    /**
+     * Adds a input file and/or directory.
+     *
+     * @param source A phpmd input source.
+     */
+    public void add(Source source) {
+        this.inputs.add(source);
     }
 
-    public String getFileOrIdentifier() {
-        return this.fileOrIdentifier;
-    }
-
-    protected void validate() {
-        if (!this.isBuildInRuleSet() && !this.isExistingFile()) {
-            throw new ValidationException("The ruleset '" + this.fileOrIdentifier + "' is neither a build-in ruleset nor an existing file.");
+    /**
+     * Appends all source files to the given executable.
+     *
+     * @param executable The context executable.
+     *
+     * @return A prepared executable.
+     */
+    public Executable toArgument(Executable executable) {
+        this.validate();
+        
+        String list = "";
+        for (Source input : this.inputs) {
+            list += "," + input.getFileOrDirectory();
         }
+        return executable.addArgument(list.substring(1));
     }
 
-    private boolean isBuildInRuleSet() {
-        return BUILD_IN_RULESETS.contains(this.fileOrIdentifier);
-    }
-
-    private boolean isExistingFile() {
-        File file = new File(this.fileOrIdentifier);
-        return (file.exists() && file.isFile());
+    /**
+     * Validates all configured sources.
+     *
+     * @throws ValidationException When one of the source files does not not
+     *         exist or no input was specified.
+     */
+    protected void validate() {
+        if (this.inputs.isEmpty()) {
+            throw new ValidationException("No input files or directories specified.");
+        }
+        for (Source input : this.inputs) {
+            input.validate();
+        }
     }
 }
